@@ -1,0 +1,16 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(docker compose:*)",
+      "Bash(netstat -ano)",
+      "Bash(git init:*)",
+      "Bash(git add:*)",
+      "Bash(git commit:*)",
+      "Bash(git remote:*)",
+      "Bash(git branch:*)",
+      "Bash(git push:*)",
+      "Bash(find . -type f \\\\\\(-name *.js -o -name *.ts -o -name *.jsx -o -name *.tsx -o -name package.json -o -name requirements.txt -o -name go.mod \\\\\\))",
+      "Bash(find . -not -path */.* -type f)"
+    ]
+  }
+}

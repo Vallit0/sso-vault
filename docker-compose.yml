@@ -27,43 +27,44 @@ services:
       retries: 3
 
   # ========================================
-  # Keycloak - SSO (with MSSQL support)
+  # Keycloak - SSO (DISABLED - kept for reference)
+  # To re-enable, uncomment the block below
   # ========================================
-  keycloak:
-    build:
-      context: ./keycloak
-      dockerfile: Dockerfile
-    container_name: keycloak
-    restart: unless-stopped
-    command: start-dev
-    environment:
-      KC_DB: mssql
-      KC_DB_URL: "jdbc:sqlserver://${MSSQL_HOST}:${MSSQL_PORT};databaseName=${MSSQL_DB};encrypt=false;trustServerCertificate=true"
-      KC_DB_USERNAME: ${MSSQL_USER}
-      KC_DB_PASSWORD: ${MSSQL_PASSWORD}
-      KC_HOSTNAME: ${KC_HOSTNAME}
-      KC_PROXY_HEADERS: xforwarded
-      KC_HTTP_ENABLED: "true"
-      KEYCLOAK_ADMIN: ${KEYCLOAK_ADMIN}
-      KEYCLOAK_ADMIN_PASSWORD: ${KEYCLOAK_ADMIN_PASSWORD}
-    networks:
-      - sso-vault-net
-    extra_hosts:
-      - "host.docker.internal:host-gateway"
-    labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.keycloak.rule=Host(`${KC_HOSTNAME}`)"
-      - "traefik.http.routers.keycloak.entrypoints=web"
-      - "traefik.http.services.keycloak.loadbalancer.server.port=8080"
-    depends_on:
-      traefik:
-        condition: service_healthy
-    healthcheck:
-      test: ["CMD-SHELL", "exec 3<>/dev/tcp/localhost/8080 && echo -e 'GET /health/ready HTTP/1.1\\r\\nHost: localhost\\r\\nConnection: close\\r\\n\\r\\n' >&3 && cat <&3 | grep -q '200\\|UP'"]
-      interval: 30s
-      timeout: 10s
-      retries: 5
-      start_period: 60s
+  # keycloak:
+  #   build:
+  #     context: ./keycloak
+  #     dockerfile: Dockerfile
+  #   container_name: keycloak
+  #   restart: unless-stopped
+  #   command: start-dev
+  #   environment:
+  #     KC_DB: mssql
+  #     KC_DB_URL: "jdbc:sqlserver://${MSSQL_HOST}:${MSSQL_PORT};databaseName=${MSSQL_DB};encrypt=false;trustServerCertificate=true"
+  #     KC_DB_USERNAME: ${MSSQL_USER}
+  #     KC_DB_PASSWORD: ${MSSQL_PASSWORD}
+  #     KC_HOSTNAME: ${KC_HOSTNAME}
+  #     KC_PROXY_HEADERS: xforwarded
+  #     KC_HTTP_ENABLED: "true"
+  #     KEYCLOAK_ADMIN: ${KEYCLOAK_ADMIN}
+  #     KEYCLOAK_ADMIN_PASSWORD: ${KEYCLOAK_ADMIN_PASSWORD}
+  #   networks:
+  #     - sso-vault-net
+  #   extra_hosts:
+  #     - "host.docker.internal:host-gateway"
+  #   labels:
+  #     - "traefik.enable=true"
+  #     - "traefik.http.routers.keycloak.rule=Host(`${KC_HOSTNAME}`)"
+  #     - "traefik.http.routers.keycloak.entrypoints=web"
+  #     - "traefik.http.services.keycloak.loadbalancer.server.port=8080"
+  #   depends_on:
+  #     traefik:
+  #       condition: service_healthy
+  #   healthcheck:
+  #     test: ["CMD-SHELL", "exec 3<>/dev/tcp/localhost/8080 && echo -e 'GET /health/ready HTTP/1.1\\r\\nHost: localhost\\r\\nConnection: close\\r\\n\\r\\n' >&3 && cat <&3 | grep -q '200\\|UP'"]
+  #     interval: 30s
+  #     timeout: 10s
+  #     retries: 5
+  #     start_period: 60s
 
   # ========================================
   # HashiCorp Vault - Secrets Management
